@@ -1,0 +1,30 @@
+<!--HTML integration is not yet funtional-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Whiteboard</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="https://cdn.rawgit.com/github/fetch/master/fetch.js"></script>
+    </head>
+    <body>
+        <canvas 
+            class="glslCanvas" 
+            data-fragment="#ifdef GL_ES
+            precision mediump float;
+            #endif
+            
+            uniform vec2 u_resolution;
+            uniform vec2 u_mouse;
+            uniform float u_time;
+            
+            void main() {
+                vec2 st = gl_FragCoord.xy/u_resolution;
+                vec2 mP = u_mouse.xy/u_resolution;
+                gl_FragColor = vec4(mP.x*st.x,mP.y*st.y,abs(sin(1.0*u_time)),1.0);
+            }" 
+            width="500" 
+            height="500">
+        </canvas>
+    </body>
+</html>
