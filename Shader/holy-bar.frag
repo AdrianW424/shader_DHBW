@@ -22,7 +22,7 @@ void main() {
     float time_coefficient = abs(sin(u_time + x));
     
     vec3 color = vec3(1);
-    float pct = distance(st,vec2(0.5));//plot(st,y);
+    float pct = distance(st,vec2(0.5)) + plot(st,y);
 
     float square_thickness = 0.2;
     vec2 la = step(vec2(0.5+(0.5*square_thickness)),vec2(st));       // left-area
