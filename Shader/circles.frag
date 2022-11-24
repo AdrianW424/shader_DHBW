@@ -22,7 +22,7 @@ void main(){
   st = st *2.-1.;
 
   // Number of sides of your shape
-  int N = 2;
+  int N = 5;
 
   // Angle and radius from the current pixel
   float a = atan(st.x,st.y)+PI;
