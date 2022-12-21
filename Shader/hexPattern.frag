@@ -49,7 +49,7 @@ void main() {
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
     st.x *= u_resolution.x/u_resolution.y;
 
-    st = movingTiles(st, 15.,1.);
+    st = movingTiles(st, 10.,1.);
 
     //vec3 color = vec3( 1.0-circle(st, 0.5 ) );
     vec3 color = vec3( 1.0-forms(st, 6 ) );
