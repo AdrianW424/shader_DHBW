@@ -55,21 +55,19 @@ float noise2D(vec2 xy) {
                     dot( random2D(xyInt + vec2(1.0,1.0) ), xyFrac - vec2(1.0,1.0) ), u.x), u.y);
 }
 
-float allRndShape(vec2 st, float radius) {
+float allRndShape(vec2 st, float radius, float randomValue) {
 	st = vec2(0.5)-st;
     float urRadis = length(st)*2.0;
     float noiseRadius = radius;
     float a = atan(st.y,st.x); // WINKEL
-    float m = abs(mod(a+u_time*2.,3.14*2.)-3.14)/0.1;
     
-    m += noise2D(st+u_time*.1)*.01;
     noiseRadius += cos(a*60.)*noise2D(st+u_time*0.7)*.1;
-    noiseRadius += (sin(a*10.)*.01*pow(m,0.5));
+    noiseRadius += (sin(a*10.)*.1 * sin(u_time+randomValue));
     return 1.-smoothstep(noiseRadius,noiseRadius+0.007,urRadis);
 }
 
-float shapeBorderWidth(vec2 st, float radius, float width) {
-    return allRndShape(st,radius)-allRndShape(st,radius-width);
+float shapeBorderWidth(vec2 st, float radius, float width, float randomValue) {
+    return allRndShape(st,radius, randomValue)-allRndShape(st,radius-width, randomValue);
 }
 
 vec3 formContent(vec2 _st, float randomElement) {
@@ -99,7 +97,7 @@ vec3 formContent(vec2 _st, float randomElement) {
     float borderWidth = 0.02;
     float pulseSpeed = 0.5;
     for (float i=1.0; i<7.0; i++){
-         color += baseColor * shapeBorderWidth(_st,0.9 - i * 0.25,((sin(u_time*pulseSpeed)+1.0)/10.0)+borderWidth);
+         color += baseColor * shapeBorderWidth(_st,0.9 - i * 0.25,((sin(u_time*pulseSpeed)+1.0)/10.0)+borderWidth, randomElement);
     }
     return color;
 }
