@@ -73,7 +73,7 @@ float generateNoise2D(vec2 coordinates) {
 
 // Die Funktion nimmt einen Punkt mit den Koordinaten coordinates und zwei float-Werte "radius" und "randomValue" entgegen.
 // Sie berechnet einen Wert zwischen 0 und 1 und gibt ihn zurück.
-float calculateShape(vec2 coordinates, float radius, float randomValue) {
+float calculateShapeInForms(vec2 coordinates, float radius, float randomValue) {
     // Stelle sicher, dass der Punkt im Bereich von (-0.5, -0.5) bis (0.5, 0.5) liegt.
     coordinates = vec2(0.5) - coordinates;
     float distanceToOrigin = length(coordinates) * 2.0;
@@ -99,10 +99,10 @@ float calculateShape(vec2 coordinates, float radius, float randomValue) {
 
 float shapeBorderWidth(vec2 coordinates, float radius, float width, float randomValue) {
     // Berechne den Abstand von coordinates zur Form
-    float distanceToShape = calculateShape(coordinates, radius, randomValue);
+    float distanceToShape = calculateShapeInForms(coordinates, radius, randomValue);
     
     // Berechne den Abstand von dem Punkt zur Form minus der Dicke der Form
-    float distanceToShapeBorder = calculateShape(coordinates, radius-width, randomValue);
+    float distanceToShapeBorder = calculateShapeInForms(coordinates, radius-width, randomValue);
     
     // Gib 1 zurück, wenn der Punkt innerhalb der Form ist und 0, wenn er außerhalb der Form ist.
     return distanceToShape-distanceToShapeBorder;
