@@ -12,8 +12,8 @@ uniform float u_time;
 
 const int   complexity      = 30;           // Höhere Komplexität der Farbmuster innerhalb der Formen des Patterns.
 float color_intensity       = 0.5;
-float pattern_zoom          = 5.0;          // Wie weit das Pattern herausgezoomt ist.
-float pattern_speed         = 0.51;         // Wie schnell sich das Pattern bewegt.
+float pattern_zoom          = 4.0;          // Wie weit das Pattern herausgezoomt ist.
+float pattern_speed         = 0.11;         // Wie schnell sich das Pattern bewegt.
 int   pattern_sides         = 6;            // Die Menge an Seiten, die die Formen des Patterns besitzen.
 
 // Diese Funktion gibt einen Zufallsfaktor zurück, der auf den übergebenen Koordinaten basiert
@@ -131,7 +131,7 @@ vec3 CalculateFormContent(vec2 coordinates, float randomElement) {
     // Beeinfluss den Positionsvektor in einem Maße, abhängig von der eingestellten Komplexität.
     for (int i = 1; i < complexity; i++) {
         vec2 newPoint = position + 2. * 0.001 + (randomElement * 0.25);
-        newPoint.x += 0.6 / float(i) * sin(float(i) * position.y + (0.5 * cos(u_time) + 0.5) / fluidSpeed + 17.0 * float(i)) + 0.5 + mouseCoords.y / mouseMult + mouseOffset;
+        newPoint.x += 0.6 / float(i) * sin(float(i) * position.y + (0.5 * cos(u_time) + 0.5) / fluidSpeed + 17.0 * float(i)) - 0.5 - mouseCoords.y / mouseMult + mouseOffset;
         newPoint.y += 0.6 / float(i) * sin(float(i) * position.x + (0.5 * sin(u_time) + 0.5) / fluidSpeed + 0.6 * float(i + 10)) - 0.5 - mouseCoords.x / mouseMult + mouseOffset;
         position = newPoint;
     }
@@ -220,7 +220,7 @@ vec2 MovingTiles(vec2 currentCoords, float zoom, float speed) {
     // Skaliere die aktuellen Koordinaten (currentCoords) anhand des Zooms
     currentCoords *= zoom;
     
-    // Berechne die aktuelle Zeit anhand der Geschwindigkeit (_speed)
+    // Berechne die aktuelle Zeit anhand der Geschwindigkeit (speed)
     float time = u_time * speed;
     
     // Ändere die x Koordinaten der Fließe in einer periodischen Art und Weise
@@ -260,13 +260,11 @@ vec3 CalculateForms(vec2 currentCoords, int numOfSides) {
     return vec3(1.0 - smoothstep(1.0 - 0.2, 1.0 - 0.22 + 0.45 * 0.2, distance));
 }
 void main() {
-    vec2 st = gl_FragCoord.xy/u_resolution.xy;
-    vec2 test = st;
-    float randomValue = (st.x/2.)-(0.5*sin((st.x)*(3.)+0.5) + st.y)/2.0;//(gl_FragCoord.x+gl_FragCoord.y)/(u_resolution.x+u_resolution.y);
-    st.x *= u_resolution.x/u_resolution.y;
-    st = MovingTiles(st, pattern_zoom, pattern_speed);
-
-    vec3 color = vec3( (1.-CreateBackground()) - ((CalculateForms(st, pattern_sides)-CreateBackground()) - CalculateFormContent(st, randomValue)) * (0. + CalculateForms(st, pattern_sides)));//+boxFilling(st, randomValue));// + boxFilling(st, 5.));
+    vec2 coordinates = gl_FragCoord.xy/u_resolution.xy;
+    float randomValue = (coordinates.x/2.)-(0.5*sin((coordinates.x)*(3.)+0.5) + coordinates.y)/2.0;//(gl_FragCoord.x+gl_FragCoord.y)/(u_resolution.x+u_resolution.y);
+    coordinates.x /= u_resolution.y/u_resolution.x;                         // Die x-Koordinate des Punktes "coordinates" wird im Verhältnis zum Seitenverhältnis der Auflösung (u_resolution.y / u_resolution.x) skaliert.
+    coordinates = MovingTiles(coordinates, pattern_zoom, pattern_speed);
+    vec3 color = vec3( (1.-CreateBackground()) - ((CalculateForms(coordinates, pattern_sides)-CreateBackground()) - CalculateFormContent(coordinates, randomValue)) * (0. + CalculateForms(coordinates, pattern_sides)));//+boxFilling(st, randomValue));// + boxFilling(st, 5.));
 
     gl_FragColor = vec4(color,1.0);
 }
