@@ -14,7 +14,7 @@ const int   complexity      = 30;           // Höhere Komplexität der Farbmust
 float color_intensity       = 0.5;
 float pattern_zoom          = 5.0;          // Wie weit das Pattern herausgezoomt ist.
 float pattern_speed         = 0.51;         // Wie schnell sich das Pattern bewegt.
-int   pattern_sides         = 6;            // Die Menge an Seiten, die die Formen des Patterns besitzen.
+int   pattern_sides         = 8;            // Die Menge an Seiten, die die Formen des Patterns besitzen.
 
 // Diese Funktion gibt einen Zufallsfaktor zurück, der auf den übergebenen Koordinaten basiert
 float getRandomValue(in vec2 coordinates) {
@@ -141,9 +141,8 @@ vec3 CalculateFormContent(vec2 coordinates, float randomElement) {
     float borderWidth = 0.02;
     float pulseSpeed = 0.5;
     
-    for (float i = 1.0; i < 7.0; i++) {
-        // Füge die Basis-Farbe zur Gesamt-Farbe (color) hinzu, modifiziert durch die Funktion shapeBorderWidth()
-        color += baseColor * shapeBorderWidth(coordinates, 0.9 - i * 0.25, ((sin(u_time * pulseSpeed) + 1.0) / 10.0) + borderWidth, randomElement);
+    for (float i = 1.0; i < 4.0; i++) {
+        color += baseColor * shapeBorderWidth(coordinates, 0.9 - i * 0.23, ((sin(u_time * pulseSpeed) + 1.0) / 10.0) + borderWidth, randomElement);
     }
     // Gebe die berechnete Farbe (color) zurück
     return color;
