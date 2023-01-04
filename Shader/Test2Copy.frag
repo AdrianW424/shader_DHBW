@@ -6,27 +6,11 @@ precision mediump float;
 
 uniform vec2 u_resolution;
 uniform float u_time;
-uniform float u_value;
 uniform vec2 u_mouse;
 
-const float Pi = 200.;
 const int   complexity      = 30;    // More points of color.
 float fluid_speed     = 3.0;  // Drives speed, higher number will make it slower.
 float color_intensity = 0.5;
-
-float rnd(float x) {
-  float y = fract(sin(x)*100000.0);
-  return y;
-}
-
-float noise(float x) {
-  float xInt = floor(x);
-  float xFrac = fract(x);
-
-  float temp = mix(rnd(xInt), rnd(xInt+1.0), xFrac);
-  //float temp = mix(rnd(xInt), rnd(xInt+1.0), smoothstep(0.,1.,xFrac));
-  return temp;
-}
 
 vec2 random2D(vec2 xy){
     xy = vec2( dot(xy,vec2(100.0,300.0)),
@@ -64,8 +48,7 @@ float shapeBorderWidth(vec2 st, float radius, float width) {
     return allRndShape(st,radius)-allRndShape(st,radius-width);
 }
 
-void main()
-{    
+vec3 formContent(vec2 _st) {
     vec2 mouse_norm = vec2(u_mouse.x/u_resolution.x, 1.0 - u_mouse.y/u_resolution.y); // Maus gibt werte von 0 bis 1 über den Screen verteilt zurück
     float mouse_mult = 10.0;
     float mouse_offset = 0.0;
@@ -95,6 +78,12 @@ void main()
     for (float i=1.0; i<7.0; i++){
          color += baseColor * shapeBorderWidth(st,0.9 - i * 0.25,((sin(u_time*pulseSpeed)+1.0)/10.0)+borderWidth);
     }
+    return color;
+}
+
+void main()
+{    
+    vec2 st = gl_FragCoord.xy/u_resolution.xy;
     
-    gl_FragColor=vec4(color, 1);
+    gl_FragColor=vec4(formContent(st), 1);
 }
