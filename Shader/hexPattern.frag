@@ -84,6 +84,7 @@ float generateNoise2D(vec2 coordinates) {
 
 // Die Funktion nimmt einen Punkt mit den Koordinaten coordinates und zwei float-Werte "radius" und "randomValue" entgegen.
 // Sie berechnet einen Wert zwischen 0 und 1 und gibt ihn zurück.
+
 float calculateShapeInForms(vec2 coordinates, float radius, float randomValue) {
     // Stelle sicher, dass der Punkt im Bereich von (-0.5, -0.5) bis (0.5, 0.5) liegt.
     coordinates = vec2(0.5) - coordinates;
@@ -120,6 +121,7 @@ float shapeBorderWidth(vec2 coordinates, float radius, float width, float random
 }
 
 // Diese Funktion berechnet den Inhalt der Formen anhand der Eingabe-Koordinaten (coordinates) und dem zufälligen Element (randomElement)
+
 vec3 CalculateFormContent(vec2 coordinates, float randomElement) {
     // Normalisiere die Maus-Koordinaten anhand der Auflösung
     vec2 mouseCoords = vec2(u_mouse.x / u_resolution.x, 1.0 - u_mouse.y / u_resolution.y);
@@ -162,6 +164,7 @@ vec3 CalculateFormContent(vec2 coordinates, float randomElement) {
 
 
 // Diese Funktion berechnet den fractional Brownian Motion Wert anhand der Eingabe-Koordinaten coordinates
+
 float CalculatefBm(vec2 coordinates) {
     // Initialisiere die Ausgabe-Variable (v) mit 0.0
     float v = 0.0;
@@ -187,6 +190,7 @@ float CalculatefBm(vec2 coordinates) {
 }
 
 // Diese Funktion erstellt einen Hintergrund anhand der aktuellen Auflösung (resolution) und der aktuellen Zeit (time)
+
 vec3 CreateBackground() {
     // Berechne die Koordinaten (coordinates) anhand der aktuellen Fragment-Koordinaten und der Auflösung
     vec2 coordinates = gl_FragCoord.xy / u_resolution.xy * 3.0;
@@ -226,6 +230,7 @@ vec3 CreateBackground() {
 }
 
 // Diese Funktion bewegt Fliesen anhand des gegebenen Zooms (zoom) und Geschwindigkeit (speed)
+
 vec2 MovingTiles(vec2 currentCoords, float zoom, float speed) {
     // Skaliere die aktuellen Koordinaten (currentCoords) anhand des Zooms
     currentCoords *= zoom;
@@ -253,6 +258,7 @@ vec2 MovingTiles(vec2 currentCoords, float zoom, float speed) {
 }
 
 // Diese Funktion berechnet die Formen in einem 2D-Raum anhand der gegebenen Seitenanzahl und der Koordinaten (_st)
+
 vec3 CalculateForms(vec2 currentCoords, int numOfSides) {
     // Transformiere die Koordinaten von (currentCoords) in den Bereich von (-1,1)
     currentCoords = currentCoords * 2. - 1.;
@@ -269,6 +275,7 @@ vec3 CalculateForms(vec2 currentCoords, int numOfSides) {
     // Rückgabe des Vektors (1.0 - glatt gesteppte Funktion des Abstandes (distance))
     return vec3(1.0 - smoothstep(1.0 - 0.2, 1.0 - 0.22 + 0.45 * 0.2, distance));
 }
+
 void main() {
     vec2 coordinates = gl_FragCoord.xy/u_resolution.xy;
     float randomValue = (coordinates.x/2.)-(0.5*sin((coordinates.x)*(3.)+0.5) + coordinates.y)/2.0;//(gl_FragCoord.x+gl_FragCoord.y)/(u_resolution.x+u_resolution.y);
