@@ -205,13 +205,13 @@ vec3 CreateBackground() {
     vec3 color = vec3(0.0);
     
     // Berechne den Vektor (brownianMotionStepOne) anhand der Koordinaten (coordinates)
-    vec2 brownianMotionStepOne = vec2(0.);
+    vec2 brownianMotionStepOne = vec2(0.0);
     brownianMotionStepOne.x = CalculatefBm(coordinates);
-    brownianMotionStepOne.y = CalculatefBm(coordinates + vec2(1.0));
+    brownianMotionStepOne.y = CalculatefBm(coordinates);
     // Berechne den Vektor (r) anhand von (brownianMotionStepOne), (coordinates) und der aktuellen Zeit
-    vec2 brownianMotionStepTwo = vec2(0.);
-    brownianMotionStepTwo.x = CalculatefBm(coordinates + 1.0 * brownianMotionStepOne + vec2(1.7, 9.2) + 0.15 * u_time);
-    brownianMotionStepTwo.y = CalculatefBm(coordinates + 1.0 * brownianMotionStepOne + vec2(8.3, 2.8) + 0.126 * u_time);
+    vec2 brownianMotionStepTwo = vec2(0.0);
+    brownianMotionStepTwo.x = CalculatefBm(0.150 * u_time + coordinates + brownianMotionStepOne);
+    brownianMotionStepTwo.y = CalculatefBm(0.126 * u_time + coordinates + brownianMotionStepOne);
     // Berechne den Wert (brownianMotionStepThree) anhand von (coordinates), (brownianMotionStepOne) und (r)
     float brownianMotionStepThree = CalculatefBm(coordinates + brownianMotionStepTwo);
     // Vermische die Farbe (color) mit Weiß anhand von (brownianMotionStepThree)
