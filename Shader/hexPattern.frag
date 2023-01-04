@@ -17,12 +17,14 @@ float pattern_speed         = 0.11;         // Wie schnell sich das Pattern bewe
 int   pattern_sides         = 6;            // Die Menge an Seiten, die die Formen des Patterns besitzen.
 
 // Diese Funktion gibt einen Zufallsfaktor zurück, der auf den übergebenen Koordinaten basiert
+
 float getRandomValue(in vec2 coordinates) {
     // Berechne einen Zufallsfaktor durch Interpolation des sinusförmigen Wertes von coordinates
     return fract(sin(dot(coordinates, vec2(12.9898, 78.233))) * 437580.5453123);
 }
 
 // Diese Funktion gibt eine zufällige Koordinate zurück, die auf den übergebenen Koordinaten basiert
+
 vec2 getRandom2D(vec2 coordinates) {
     // Verschiebe und skaliere die Koordinaten, um eine zufällige Koordinate zu erhalten
     coordinates = vec2( dot(coordinates, vec2(100.0, 300.0)),
@@ -32,6 +34,7 @@ vec2 getRandom2D(vec2 coordinates) {
 }
 
 // Diese Funktion generiert einen noise-Wert für gegebene Koordinaten.
+
 float getNoise(in vec2 coordinates) {
     // Runde die Texture Koordinaten auf die nächste ganze Zahl ab
     vec2 tileIndex = floor(coordinates);
@@ -55,6 +58,7 @@ float getNoise(in vec2 coordinates) {
 }
 
 // Diese Funktion generiert einen noise-Wert für gegebene Koordinaten.
+
 float generateNoise2D(vec2 coordinates) {
     
     // Bestimme den Bruchteil der auf eine Ganzzahl gerundeten Koordinate.
