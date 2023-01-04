@@ -65,10 +65,10 @@ float generateNoise2D(vec2 coordinates) {
     vec2 smootherFractionalPart = smoothstep(0.0, 1.0, fractionalPart);
 
     // Mische den Noise-Wert zwischen den vier benachbarten Integralteilen anhand des Bruchteils und gib den resultierenden Wert zurück.
-    return  mix(    mix(    dot(getRandom2D(integerPart + vec2(0.0, 0.0)), fractionalPart - vec2(0.0, 0.0)),
-                            dot(getRandom2D(integerPart + vec2(1.0, 0.0)), fractionalPart - vec2(1.0, 0.0)), smootherFractionalPart.x),
-                    mix(    dot(getRandom2D(integerPart + vec2(0.0, 1.0)), fractionalPart - vec2(0.0, 1.0)),
-                            dot(getRandom2D(integerPart + vec2(1.0, 1.0)), fractionalPart - vec2(1.0, 1.0)), smootherFractionalPart.x), smootherFractionalPart.y);
+    return  mix( mix(dot(getRandom2D(integerPart + vec2(0.0, 0.0)), fractionalPart - vec2(0.0, 0.0)),
+                 dot(getRandom2D(integerPart + vec2(1.0, 0.0)), fractionalPart - vec2(1.0, 0.0)), smootherFractionalPart.x),
+                 mix(dot(getRandom2D(integerPart + vec2(0.0, 1.0)), fractionalPart - vec2(0.0, 1.0)),
+                 dot(getRandom2D(integerPart + vec2(1.0, 1.0)), fractionalPart - vec2(1.0, 1.0)), smootherFractionalPart.x), smootherFractionalPart.y);
 }
 
 // Die Funktion nimmt einen Punkt mit den Koordinaten coordinates und zwei float-Werte "radius" und "randomValue" entgegen.
