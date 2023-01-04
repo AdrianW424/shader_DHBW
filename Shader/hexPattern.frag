@@ -166,11 +166,11 @@ vec3 CalculateFormContent(vec2 coordinates, float randomElement) {
 // Diese Funktion berechnet den fractional Brownian Motion Wert anhand der Eingabe-Koordinaten coordinates
 
 float CalculatefBm(vec2 coordinates) {
-    // Initialisiere die Ausgabe-Variable (v) mit 0.0
-    float v = 0.0;
+    // Initialisiere die Ausgabe-Variable (result) mit 0.0
+    float result = 0.0;
     
-    // Initialisiere die Hilfs-Variable (a) mit 0.5
-    float a = 0.5;
+    // Initialisiere die Hilfs-Variable (temp) mit 0.5
+    float temp = 0.5;
     // Initialisiere den Verschiebungs-Vektor mit (100.0, 100.0)
     vec2 shift = vec2(100.0);
     // Erstelle eine Rotation der Koordinaten (rot) um 90°
@@ -178,15 +178,15 @@ float CalculatefBm(vec2 coordinates) {
     -sin(0.5), cos(0.50));
     // Iteriere über alle Octaven
     for (int i = 0; i < NUM_OCTAVES; ++i) {
-        // Addiere den aktuellen Wert (a) von Noise an die Ausgabe-Variable (v)
-        v += a * getNoise(coordinates);
+        // Addiere den aktuellen Wert (temp) von Noise an die Ausgabe-Variable (result)
+        result += temp * getNoise(coordinates);
         // Rotiere und verschiebe die Koordinaten coordinates
         coordinates = rot * coordinates * 2.0 + shift;
-        // Halbiere den Hilfs-Wert (a)
-        a *= 0.5;
+        // Halbiere den Hilfs-Wert (temp)
+        temp *= 0.5;
     }
-    // Gebe den berechneten fBm Wert (v) zurück
-    return v;
+    // Gebe den berechneten fBm Wert (result) zurück
+    return result;
 }
 
 // Diese Funktion erstellt einen Hintergrund anhand der aktuellen Auflösung (resolution) und der aktuellen Zeit (time)
@@ -210,8 +210,8 @@ vec3 CreateBackground() {
     brownianMotionStepOne.y = CalculatefBm(coordinates);
     // Berechne den Vektor (r) anhand von (brownianMotionStepOne), (coordinates) und der aktuellen Zeit
     vec2 brownianMotionStepTwo = vec2(0.0);
-    brownianMotionStepTwo.x = CalculatefBm(0.150 * u_time + coordinates + brownianMotionStepOne);
-    brownianMotionStepTwo.y = CalculatefBm(0.126 * u_time + coordinates + brownianMotionStepOne);
+    brownianMotionStepTwo.x = CalculatefBm(0.200 * u_time + coordinates + brownianMotionStepOne);
+    brownianMotionStepTwo.y = CalculatefBm(0.125 * u_time + coordinates + brownianMotionStepOne);
     // Berechne den Wert (brownianMotionStepThree) anhand von (coordinates), (brownianMotionStepOne) und (r)
     float brownianMotionStepThree = CalculatefBm(coordinates + brownianMotionStepTwo);
     // Vermische die Farbe (color) mit Weiß anhand von (brownianMotionStepThree)
