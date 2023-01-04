@@ -19,7 +19,7 @@ int   pattern_sides         = 6;            // Die Menge an Seiten, die die Form
 // Diese Funktion gibt einen Zufallsfaktor zurück, der auf den übergebenen Koordinaten basiert
 float getRandomValue(in vec2 coordinates) {
     // Berechne einen Zufallsfaktor durch Interpolation des sinusförmigen Wertes von coordinates
-    return fract(sin(dot(coordinates, vec2(12.9898, 78.233))) * 43758.5453123);
+    return fract(sin(dot(coordinates, vec2(12.9898, 78.233))) * 437580.5453123);
 }
 
 // Diese Funktion gibt eine zufällige Koordinate zurück, die auf den übergebenen Koordinaten basiert
