@@ -204,7 +204,7 @@ vec3 CreateBackground() {
     // Initialisiere die Farbe (color) als Schwarz
     vec3 color = vec3(0.0);
     
-    // Berechne den Vektor (brownianMotionStepOne) anhand der Koordinaten (coordinates) und der aktuellen Zeit
+    // Berechne den Vektor (brownianMotionStepOne) anhand der Koordinaten (coordinates)
     vec2 brownianMotionStepOne = vec2(0.);
     brownianMotionStepOne.x = CalculatefBm(coordinates);
     brownianMotionStepOne.y = CalculatefBm(coordinates + vec2(1.0));
