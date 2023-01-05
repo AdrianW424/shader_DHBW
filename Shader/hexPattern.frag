@@ -276,13 +276,22 @@ vec3 calculateForms(vec2 currentCoords, int numOfSides) {
     return vec3(1.0 - smoothstep(1.0 - 0.2, 1.0 - 0.22 + 0.45 * 0.2, distance));
 }
 
+// Diese Funktion berechnet die Farbe des aktuellen Pixels, indem alle Bausteine des Shaders miteinbezogen und zusammengerechnet werden.
+
+vec3 calculatePixelColor(vec2 coordinates, float randomValue) {
+    vec3 background = createBackground();                                                       // Der Hintergrundwert wird für den aktuellen Pixel berechnet.
+    vec3 formContent = calculateFormContent(coordinates, randomValue);                          // Der Kunstateil des aktuellen Pixels wird hier berechnet.
+    vec3 filledForms = (calculateForms(coordinates, pattern_sides)-background) - formContent;   // Die Formen werden mit dem zuvor berechneten Inhalt gefüllt und der Farbwert für den aktuellen Pixel wird gespeichert.
+    vec3 formMask = (0. + calculateForms(coordinates, pattern_sides));                          // Die Maske wird erstellt, die dafür sorgt, dass die Formen nur dort Einfluss nehmen, an denen sie angezeigt werden.
+    vec3 finalColor = 1.0 - background - filledForms * formMask;                                // Von der Basis 1.0 wird zuerst der Hintergundwert und dann der Wert für das Muster abgezogen, auf das zuvor die erstellte Maske angewendet wird.
+    return finalColor;
+}
+
 void main() {
     vec2 coordinates = gl_FragCoord.xy/u_resolution.xy;
     float randomValue = (coordinates.x/2.)-(0.5*sin((coordinates.x)*(3.)+0.5) + coordinates.y)/2.0;//(gl_FragCoord.x+gl_FragCoord.y)/(u_resolution.x+u_resolution.y);
     coordinates.x /= u_resolution.y/u_resolution.x;                         // Die x-Koordinate des Punktes "coordinates" wird im Verhältnis zum Seitenverhältnis der Auflösung (u_resolution.y / u_resolution.x) skaliert.
     coordinates = movingTiles(coordinates, pattern_zoom, pattern_speed);
-    vec3 color = vec3( (1.-createBackground()) - ((calculateForms(coordinates, pattern_sides)-createBackground()) - calculateFormContent(coordinates, randomValue)) * (0. + calculateForms(coordinates, pattern_sides)));//+boxFilling(st, randomValue));// + boxFilling(st, 5.));
-
-    gl_FragColor = vec4(color,1.0);
+    gl_FragColor = vec4(calculatePixelColor(coordinates, randomValue),1.0);
 }
 
