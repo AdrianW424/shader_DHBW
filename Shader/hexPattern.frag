@@ -122,7 +122,7 @@ float shapeBorderWidth(vec2 coordinates, float radius, float width, float random
 
 // Diese Funktion berechnet den Inhalt der Formen anhand der Eingabe-Koordinaten (coordinates) und dem zufälligen Element (randomElement)
 
-vec3 CalculateFormContent(vec2 coordinates, float randomElement) {
+vec3 calculateFormContent(vec2 coordinates, float randomElement) {
     // Normalisiere die Maus-Koordinaten anhand der Auflösung
     vec2 mouseCoords = vec2(u_mouse.x / u_resolution.x, 1.0 - u_mouse.y / u_resolution.y);
     
@@ -165,7 +165,7 @@ vec3 CalculateFormContent(vec2 coordinates, float randomElement) {
 
 // Diese Funktion berechnet den fractional Brownian Motion Wert anhand der Eingabe-Koordinaten coordinates
 
-float CalculatefBm(vec2 coordinates) {
+float calculateFBM(vec2 coordinates) {
     // Initialisiere die Ausgabe-Variable (result) mit 0.0
     float result = 0.0;
     
@@ -191,7 +191,7 @@ float CalculatefBm(vec2 coordinates) {
 
 // Diese Funktion erstellt einen Hintergrund anhand der aktuellen Auflösung (resolution) und der aktuellen Zeit (time)
 
-vec3 CreateBackground() {
+vec3 createBackground() {
     // Berechne die Koordinaten (coordinates) anhand der aktuellen Fragment-Koordinaten und der Auflösung
     vec2 coordinates = gl_FragCoord.xy / u_resolution.xy * 3.0;
     
@@ -206,14 +206,14 @@ vec3 CreateBackground() {
     
     // Berechne den Vektor (brownianMotionStepOne) anhand der Koordinaten (coordinates)
     vec2 brownianMotionStepOne = vec2(0.0);
-    brownianMotionStepOne.x = CalculatefBm(coordinates);
-    brownianMotionStepOne.y = CalculatefBm(coordinates);
+    brownianMotionStepOne.x = calculateFBM(coordinates);
+    brownianMotionStepOne.y = calculateFBM(coordinates);
     // Berechne den Vektor (r) anhand von (brownianMotionStepOne), (coordinates) und der aktuellen Zeit
     vec2 brownianMotionStepTwo = vec2(0.0);
-    brownianMotionStepTwo.x = CalculatefBm(0.200 * u_time + coordinates + brownianMotionStepOne);
-    brownianMotionStepTwo.y = CalculatefBm(0.125 * u_time + coordinates + brownianMotionStepOne);
+    brownianMotionStepTwo.x = calculateFBM(0.200 * u_time + coordinates + brownianMotionStepOne);
+    brownianMotionStepTwo.y = calculateFBM(0.125 * u_time + coordinates + brownianMotionStepOne);
     // Berechne den Wert (brownianMotionStepThree) anhand von (coordinates), (brownianMotionStepOne) und (r)
-    float brownianMotionStepThree = CalculatefBm(coordinates + brownianMotionStepTwo);
+    float brownianMotionStepThree = calculateFBM(coordinates + brownianMotionStepTwo);
     // Vermische die Farbe (color) mit Weiß anhand von (brownianMotionStepThree)
     color = mix(  vec3(1.0, 1.0, 1.0),
                     color,
@@ -231,26 +231,26 @@ vec3 CreateBackground() {
 
 // Diese Funktion bewegt Fliesen anhand des gegebenen Zooms (zoom) und Geschwindigkeit (speed)
 
-vec2 MovingTiles(vec2 currentCoords, float zoom, float speed) {
+vec2 movingTiles(vec2 currentCoords, float zoom, float speed) {
     // Skaliere die aktuellen Koordinaten (currentCoords) anhand des Zooms
     currentCoords *= zoom;
-    
+
     // Berechne die aktuelle Zeit anhand der Geschwindigkeit (speed)
     float time = u_time * speed;
     
     // Ändere die x Koordinaten der Fließe in einer periodischen Art und Weise
-    if (fract(time) > 0.5) {
-        if (fract(currentCoords.y * 0.5) > 0.5) {
-            currentCoords.x += fract(time) * 2.0;
-        } else {
+    if ( fract(time) < 0.5 ) {                              // Aussage ist wahr für eine halbe Zeiteinheit. Kommt auf die eingestellte Geschwindigkeit an.
+        if ( fract( currentCoords.y * 0.5 ) > 0.5 ) {       // Wahr für jede zweite Spalte an Fließen.
             currentCoords.x -= fract(time) * 2.0;
+        } else {
+            currentCoords.x += fract(time) * 4.0;
         }
-    } else {
-    // Ändere die y Koordinaten der Fließe in einer periodischen Art und Weise
-    if (fract(currentCoords.x * 0.5) > 0.5) {
+    } else {                                                // Block wird für eine halbe Zeiteinheit ausgeführt. Kommt auf die eingestellte Geschwindigkeit an.
+        // Ändere die y Koordinaten der Fließe in einer periodischen Art und Weise
+        if ( fract( currentCoords.x * 0.5 ) > 0.5 ) {       // Wahr für jede zweite Zeile an Fließen.
             currentCoords.y += fract(time) * 2.0;
         } else {
-            currentCoords.y -= fract(time) * 2.0;
+            currentCoords.y -= fract(time) * 4.0;
         }
     }
     // Rückgabe des ganzzahligen Bruchteils der aktuellen Koordinaten
@@ -259,7 +259,7 @@ vec2 MovingTiles(vec2 currentCoords, float zoom, float speed) {
 
 // Diese Funktion berechnet die Formen in einem 2D-Raum anhand der gegebenen Seitenanzahl und der Koordinaten (_st)
 
-vec3 CalculateForms(vec2 currentCoords, int numOfSides) {
+vec3 calculateForms(vec2 currentCoords, int numOfSides) {
     // Transformiere die Koordinaten von (currentCoords) in den Bereich von (-1,1)
     currentCoords = currentCoords * 2. - 1.;
     
@@ -280,8 +280,8 @@ void main() {
     vec2 coordinates = gl_FragCoord.xy/u_resolution.xy;
     float randomValue = (coordinates.x/2.)-(0.5*sin((coordinates.x)*(3.)+0.5) + coordinates.y)/2.0;//(gl_FragCoord.x+gl_FragCoord.y)/(u_resolution.x+u_resolution.y);
     coordinates.x /= u_resolution.y/u_resolution.x;                         // Die x-Koordinate des Punktes "coordinates" wird im Verhältnis zum Seitenverhältnis der Auflösung (u_resolution.y / u_resolution.x) skaliert.
-    coordinates = MovingTiles(coordinates, pattern_zoom, pattern_speed);
-    vec3 color = vec3( (1.-CreateBackground()) - ((CalculateForms(coordinates, pattern_sides)-CreateBackground()) - CalculateFormContent(coordinates, randomValue)) * (0. + CalculateForms(coordinates, pattern_sides)));//+boxFilling(st, randomValue));// + boxFilling(st, 5.));
+    coordinates = movingTiles(coordinates, pattern_zoom, pattern_speed);
+    vec3 color = vec3( (1.-createBackground()) - ((calculateForms(coordinates, pattern_sides)-createBackground()) - calculateFormContent(coordinates, randomValue)) * (0. + calculateForms(coordinates, pattern_sides)));//+boxFilling(st, randomValue));// + boxFilling(st, 5.));
 
     gl_FragColor = vec4(color,1.0);
 }
